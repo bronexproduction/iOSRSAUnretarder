@@ -11,6 +11,10 @@ extension SecKey {
     
     public func toDER() -> Data? {
         
+        guard let rsaPublicKeyData = try? self.toData() else {
+            return nil
+        }
+        
         // ASN.1 identifiers
         let bitStringIdentifier: UInt8 = 0x03
         let sequenceIdentifier: UInt8 = 0x30
@@ -18,10 +22,6 @@ extension SecKey {
         // ASN.1 AlgorithmIdentfier for RSA encryption: OID 1 2 840 113549 1 1 1 and NULL
         let algorithmIdentifierForRSAEncryption: [UInt8] = [0x30, 0x0d, 0x06,
                                                             0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05, 0x00]
-        
-        guard let rsaPublicKeyData = try? self.toData() else {
-            return nil
-        }
         
         var derEncodedKeyBytes = [UInt8](rsaPublicKeyData)
         
